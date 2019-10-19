@@ -74,7 +74,6 @@ public class BankersQueue<E> implements Qeue<E>, Iterable<E> {
         @Override
         public E next() {
             checkModCount();
-            expectedModCount = modCount;
             if(frontIt.hasPrevious())
                 return frontIt.previous();
             else if(backIt.hasNext())
