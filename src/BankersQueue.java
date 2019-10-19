@@ -41,10 +41,10 @@ public class BankersQueue<E> implements Qeue<E>, Iterable<E> {
     }
 
     private void checkIfEmpty(){
-        if(isEmpty()){
+        if(isEmpty())
             throw new NoSuchElementException();
-        }
-        if (front.isEmpty()) backToFront();
+        if (front.isEmpty())
+            backToFront();
     }
 
     private void backToFront() {
@@ -73,7 +73,8 @@ public class BankersQueue<E> implements Qeue<E>, Iterable<E> {
 
         @Override
         public E next() {
-            checkModCount();
+            if(expectedModCount != modCount)
+                throw new ConcurrentModificationException();
             if(frontIt.hasPrevious())
                 return frontIt.previous();
             else if(backIt.hasNext())
@@ -85,12 +86,6 @@ public class BankersQueue<E> implements Qeue<E>, Iterable<E> {
         @Override
         public void remove() {
             throw new UnsupportedOperationException();
-        }
-
-        private void checkModCount(){
-            if(expectedModCount != modCount){
-                throw new ConcurrentModificationException();
-            }
         }
     }
 }
