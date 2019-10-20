@@ -1,31 +1,28 @@
 public class BankClient {
     private int arrivalTime;
     private int exitTime;
-    private int waitTime;
-    private static final int SERVICE_TIME = 30;
+    private int serviceTime;
 
-    public BankClient(){
-        this.arrivalTime = 0;
-        this.exitTime = 0;
-    }
-
-    public void setArrivalTime(int arrivalTime) {
+    public BankClient(int arrivalTime) {
         this.arrivalTime = arrivalTime;
-    }
-
-    public void setWaitTime(int attendTime){
-        waitTime = attendTime - arrivalTime;
-    }
-
-    public void setExitTime(int exitTime) {
-        this.exitTime = arrivalTime + waitTime + SERVICE_TIME;
+        this.exitTime = 0;
+        this.serviceTime = 0;
     }
 
     public int getArrivalTime() {
         return arrivalTime;
     }
 
-    public int getExitTime() {
+    public void setExitTime(int time){
+        exitTime = time;
+    }
+
+    public int updateServiceTime(int time){
+        serviceTime += time;
+        return serviceTime;
+    }
+
+    public int getExitTime(){
         return exitTime;
     }
 }
