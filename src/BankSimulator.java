@@ -1,30 +1,23 @@
 import java.util.LinkedList;
-import java.util.ListIterator;
 
 public class BankSimulator {
 
-    private LinkedList<BankersQueue<BankClient>> bankers = new LinkedList<>();
+    private LinkedList<BankersQueue<BankClient>> bank = new LinkedList<>();
     private static final int numOfClients = 100;
     private static final int clientTime = 15;
     private static final int serviceTime = 30;
     private int mean = 0;
 
-    public static void main(String[] args) {
-        BankSimulator bank = new BankSimulator();
-        bank.run();
-    }
-
-    private void run() {
-        for (int i = 1; i <= 10; ++i) {
-            bankers.add(new BankersQueue<>());
-            simulation();
-            mean /= numOfClients;
+    private void run(){
+        for (int i = 0; i < 10; ++i) {
+            bank.add(new BankersQueue<>());
+            mean = simulation();
             System.out.println(mean);
             mean = 0;
         }
     }
 
-    private void simulation() {
+    private int simulation() {
         int clients = 0;
         boolean noMoreClients = false;
         for (int sec = 0; !noMoreClients; ++sec) {
@@ -34,21 +27,22 @@ public class BankSimulator {
             }
             noMoreClients = updateQueues(sec);
         }
+        mean /= numOfClients;
+        return mean;
     }
 
     private void enterNewClient(int seconds) {
-        int emptiest = searchTheEmptiestQueue();
-        bankers.get(emptiest).add(new BankClient(seconds));
+        BankersQueue<BankClient> queue = shortestQueue();
+        queue.add(new BankClient(seconds));
     }
 
-    private int searchTheEmptiestQueue(){
-        int queue = 0;
-        int min = bankers.get(0).size();
-        for (int i = 0; i < bankers.size(); ++i) {
-            int size = bankers.get(i).size();
-            if (size < min) {
-                min = size;
-                queue = i;
+    private BankersQueue<BankClient> shortestQueue() {
+        BankersQueue<BankClient> queue = new BankersQueue<>();
+        int min = numOfClients;
+        for (BankersQueue<BankClient> b : bank) {
+            if (b.size() < min) {
+                min = b.size();
+                queue = b;
             }
         }
         return queue;
@@ -56,22 +50,41 @@ public class BankSimulator {
 
     private boolean updateQueues(int time) {
         boolean noMoreClients = true;
-        for(BankersQueue<BankClient> queue : bankers){
-            if(!queue.isEmpty()){
-                updateServiceTime(queue, time);
+        for (BankersQueue<BankClient> queue : bank) {
+            if (!queue.isEmpty()) {
+                updateServedClient(queue, time);
                 noMoreClients = false;
             }
         }
         return noMoreClients;
     }
 
-    private void updateServiceTime(BankersQueue<BankClient> queue, int time){
+    private void updateServedClient(BankersQueue<BankClient> queue, int time) {
         BankClient client = queue.element();
-        if(client.updateServiceTime(1) == serviceTime){
-            client.setExitTime(time);
-            mean += client.getExitTime() - client.getArrivalTime() + 1;
+        newServedclient(client, time);
+
+        if (time == client.getExitTime()) {
+            mean += client.getExitTime() - client.getArrivalTime();
             queue.remove();
+
+            if (!queue.isEmpty()) {
+                client = queue.element();
+                newServedclient(client, time);
+            }
         }
+
+    }
+
+    private void newServedclient(BankClient client, int time) {
+        if (client.getExitTime() == -1) {
+            int waitTime = time - client.getArrivalTime();
+            client.setExitTime(client.getArrivalTime() + waitTime + serviceTime);
+        }
+    }
+
+    public static void main(String[] args) {
+        BankSimulator main = new BankSimulator();
+        main.run();
     }
 
 }
