@@ -9,7 +9,7 @@ public class BankSimulator {
     private int mean = 0;
 
     private void run(){
-        for (int i = 0; i < 10; ++i) {
+        for (int i = 1; i <= 10; ++i) {
             bank.add(new BankersQueue<>());
             mean = simulation();
             System.out.println(mean);
@@ -19,19 +19,30 @@ public class BankSimulator {
 
     private int simulation() {
         int clients = 0;
-        boolean noMoreClients = false;
-        for (int sec = 0; !noMoreClients; ++sec) {
+        for (int sec = 0; !checkQueues(clients); ++sec) {
+            updateQueues(sec);
             if (clients < numOfClients && sec % clientTime == 0) {
-                enterNewClient(sec);
+                addNewClient(sec);
                 ++clients;
             }
-            noMoreClients = updateQueues(sec);
+            updateQueues(sec);
         }
         mean /= numOfClients;
         return mean;
     }
 
-    private void enterNewClient(int seconds) {
+    private boolean checkQueues(int clients){
+        if(clients > 0){
+            for(BankersQueue queue : bank){
+                if(!queue.isEmpty())
+                    return false;
+            }
+            return true;
+        }else
+            return false;
+    }
+
+    private void addNewClient(int seconds) {
         BankersQueue<BankClient> queue = shortestQueue();
         queue.add(new BankClient(seconds));
     }
@@ -48,31 +59,21 @@ public class BankSimulator {
         return queue;
     }
 
-    private boolean updateQueues(int time) {
-        boolean noMoreClients = true;
+    private void updateQueues(int time) {
         for (BankersQueue<BankClient> queue : bank) {
             if (!queue.isEmpty()) {
                 updateServedClient(queue, time);
-                noMoreClients = false;
             }
         }
-        return noMoreClients;
     }
 
     private void updateServedClient(BankersQueue<BankClient> queue, int time) {
         BankClient client = queue.element();
         newServedclient(client, time);
-
         if (time == client.getExitTime()) {
             mean += client.getExitTime() - client.getArrivalTime();
             queue.remove();
-
-            if (!queue.isEmpty()) {
-                client = queue.element();
-                newServedclient(client, time);
-            }
         }
-
     }
 
     private void newServedclient(BankClient client, int time) {
