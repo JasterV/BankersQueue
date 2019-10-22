@@ -2,17 +2,13 @@ public class BankClient {
     private int arrivalTime;
     private int exitTime;
 
-    public BankClient(int arrivalTime) {
+    public BankClient(int arrivalTime, int exitTime) {
         this.arrivalTime = arrivalTime;
-        this.exitTime = -1;
+        this.exitTime = exitTime;
     }
 
     public int getArrivalTime() {
         return arrivalTime;
-    }
-
-    public void setExitTime(int time){
-        exitTime = time;
     }
 
     public int getExitTime(){
