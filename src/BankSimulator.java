@@ -1,4 +1,3 @@
-
 public class BankSimulator {
     private BankersQueue<BankClient> bank = new BankersQueue<>();
     private static final int numMaximumClients = 100;

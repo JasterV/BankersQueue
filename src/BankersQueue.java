@@ -49,9 +49,14 @@ public class BankersQueue<E> implements Queue<E>, Iterable<E> {
 
     private void backToFront() {
         Iterator<E> it = back.iterator();
-        while (it.hasNext()) {
+        backToFront(it);
+    }
+
+    private void backToFront(Iterator<E> it){
+        if(it.hasNext()){
             front.add(0, it.next());
             it.remove();
+            backToFront(it);
         }
     }
 

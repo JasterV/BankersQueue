@@ -14,14 +14,10 @@ class BankersQueueTest {
         bq.add(3);
         bq.add(4);
         bq.add(43);
-        bq.add(70);
-        assertFalse(bq.isEmpty());
-        assertEquals(bq.size(), 4);
-        bq.remove();
-        bq.add(7);
-        assertFalse(bq.isEmpty());
-        bq.remove();
         assertEquals(bq.size(), 3);
+        bq.remove();
+        assertEquals(bq.size(), 2);
+        assertFalse(bq.isEmpty());
     }
 
     @Test
