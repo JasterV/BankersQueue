@@ -8,10 +8,10 @@ public class BankSimulator {
     private int mean = 0;
 
     private void run() {
-        for (int i = 1; i <= numMaxBankers; ++i) {
-            simulation(i);
+        for (int numBankers = 1; numBankers <= numMaxBankers; ++numBankers) {
+            simulation(numBankers);
             mean = mean / numMaximumClients;
-            System.out.println("Simulació amb " + i + " caixers: " + mean);
+            System.out.println("Simulació amb " + numBankers + " caixers: " + mean);
             mean = 0;
         }
     }
@@ -27,7 +27,6 @@ public class BankSimulator {
             int exitTime = checkPreviousClients(numCurrentClients, time, numBankers);
             bank.add(new BankClient(time, exitTime));
             mean += exitTime - time;
-            time += clientTime;
             simulation(numCurrentClients + 1, time + clientTime, numBankers);
         }
         removeRemainingClients();
