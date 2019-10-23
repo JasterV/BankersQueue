@@ -4,49 +4,53 @@ public class BankSimulator {
     private static final int numMaximumClients = 100;
     private static final int clientTime = 15;
     private static final int serviceTime = 120;
-
-    private int numCurrentClients = 0;
-    private int time = 0;
+    private static final int numMaxBankers = 10;
     private int mean = 0;
+
+    private void run() {
+        for (int i = 1; i <= numMaxBankers; ++i) {
+            simulation(i);
+            mean = mean / numMaximumClients;
+            System.out.println("Simulació amb " + i + " caixers: " + mean);
+            mean = 0;
+        }
+    }
+
+    private void simulation(int numBankers) {
+        int numCurrentClients = 0;
+        int time = 0;
+        simulation(numCurrentClients, time, numBankers);
+    }
+
+    private void simulation(int numCurrentClients, int time, int numBankers) {
+        if (numCurrentClients < numMaximumClients) {
+            int exitTime = checkPreviousClients(numCurrentClients, time, numBankers);
+            bank.add(new BankClient(time, exitTime));
+            mean += exitTime - time;
+            time += clientTime;
+            simulation(numCurrentClients + 1, time + clientTime, numBankers);
+        }
+        removeRemainingClients();
+    }
+
+    private int checkPreviousClients(int numCurrentClients, int time, int numBankers) {
+        if (numCurrentClients < numBankers)
+            return time + serviceTime;
+        else {
+            BankClient firstClientOnQueue = bank.element();
+            bank.remove();
+            return (time >= firstClientOnQueue.getExitTime()) ? time + serviceTime : firstClientOnQueue.getExitTime() + serviceTime;
+        }
+    }
+
+    private void removeRemainingClients() {
+        if (!bank.isEmpty()) {
+            bank.remove();
+        }
+    }
 
     public static void main(String[] args) {
         BankSimulator main = new BankSimulator();
-        int numMaxBankers = 10;
-        main.run(1, numMaxBankers);
-    }
-
-    private void run(int numBankers, int numMaxBankers){
-        if(numBankers <= numMaxBankers){
-            int[] lastExitTimes = new int[numBankers];
-            bank = new BankersQueue<>();
-            simulation(numBankers, lastExitTimes);
-
-            mean = mean/numMaximumClients;
-            System.out.println("Simulació amb " + numBankers + " caixers: " + mean);
-            time = numCurrentClients = mean = 0;
-
-            run(numBankers + 1, numMaxBankers);
-        }
-    }
-
-    private void simulation(int numBankers, int[] lastExitTimes) {
-        if (numCurrentClients < numMaximumClients) {
-            addClients(0, numBankers, lastExitTimes);
-            simulation(numBankers, lastExitTimes);
-        }
-    }
-
-    private void addClients(int currentBanker, int numBankers, int[] lastExitTimes) {
-        if (numCurrentClients < numMaximumClients && currentBanker < numBankers) {
-            int exitTime = (time >= lastExitTimes[currentBanker]) ? time + serviceTime : lastExitTimes[currentBanker] + serviceTime;
-            bank.add(new BankClient(time, exitTime));
-            lastExitTimes[currentBanker] = exitTime;
-
-            ++numCurrentClients;
-            mean += exitTime - time;
-            time += clientTime;
-            addClients(currentBanker + 1, numBankers, lastExitTimes);
-        }
-
+        main.run();
     }
 }
