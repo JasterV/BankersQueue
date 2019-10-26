@@ -11,11 +11,10 @@ import java.io.File;
 import java.io.IOException;
 
 public class ChartBuilder extends JFrame {
-    private BankSimulator bk = new BankSimulator();
+    private BankSimulator bank = new BankSimulator();
 
-    public ChartBuilder() {
+    private ChartBuilder() {
         builder();
-
     }
 
     private void builder() {
@@ -23,34 +22,31 @@ public class ChartBuilder extends JFrame {
         JFreeChart chart = createChart(dataset);
         BufferedImage image = chart.createBufferedImage(1200, 700);
         buildImage(image);
-
     }
 
     private JFreeChart createChart(CategoryDataset dataset) {
-        JFreeChart barChart = ChartFactory.createBarChart(
+        return ChartFactory.createBarChart(
                 "BankersQueue",
                 "stage",
                 "Minutes",
                 dataset,
                 PlotOrientation.VERTICAL,
                 false, true, false);
-
-        return barChart;
     }
 
     private CategoryDataset createDataset() {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        bk.run();
-        dataset.setValue(bk.getMean(0) / 60, "Minutes", "Stage 1");
-        dataset.setValue(bk.getMean(1) / 60, "Minutes", "Stage 2");
-        dataset.setValue(bk.getMean(2) / 60, "Minutes", "Stage 3");
-        dataset.setValue(bk.getMean(3) / 60, "Minutes", "Stage 4");
-        dataset.setValue(bk.getMean(4) / 60, "Minutes", "Stage 5");
-        dataset.setValue(bk.getMean(5) / 60, "Minutes", "Stage 6");
-        dataset.setValue(bk.getMean(6) / 60, "Minutes", "Stage 7");
-        dataset.setValue(bk.getMean(7) / 60, "Minutes", "Stage 8");
-        dataset.setValue(bk.getMean(8) / 60, "Minutes", "Stage 9");
-        dataset.setValue(bk.getMean(9) / 60, "Minutes", "Stage 10");
+        bank.run();
+        dataset.setValue(bank.getMean(0) / 60, "Minutes", "1 banker");
+        dataset.setValue(bank.getMean(1) / 60, "Minutes", "2 bankers");
+        dataset.setValue(bank.getMean(2) / 60, "Minutes", "3 bankers");
+        dataset.setValue(bank.getMean(3) / 60, "Minutes", "4 bankers");
+        dataset.setValue(bank.getMean(4) / 60, "Minutes", "5 bankers");
+        dataset.setValue(bank.getMean(5) / 60, "Minutes", "6 bankers");
+        dataset.setValue(bank.getMean(6) / 60, "Minutes", "7 bankers");
+        dataset.setValue(bank.getMean(7) / 60, "Minutes", "8 bankers");
+        dataset.setValue(bank.getMean(8) / 60, "Minutes", "9 bankers");
+        dataset.setValue(bank.getMean(9) / 60, "Minutes", "10 bankers");
         return dataset;
     }
 
@@ -63,7 +59,6 @@ public class ChartBuilder extends JFrame {
     }
 
     public static void main(String[] args) {
-
         SwingUtilities.invokeLater(() -> {
             ChartBuilder ex = new ChartBuilder();
         });

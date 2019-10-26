@@ -4,15 +4,15 @@ public class BankSimulator {
     private static final int clientTime = 15;
     private static final int serviceTime = 120;
     private static final int numMaxBankers = 10;
-    private int mean = 0;
-    private static int[] meanArray = new int[10];
+    private float mean = 0;
+    private static float[] meanDataSet = new float[numMaxBankers];
 
     void run() {
         for (int numBankers = 1; numBankers <= numMaxBankers; ++numBankers) {
             simulation(numBankers);
-            meanArray[numBankers - 1] = mean;
+            meanDataSet[numBankers - 1] = mean;
+            System.out.println(String.format("Simulació amb %d caixers: %.1f", numBankers, mean));
             mean = 0;
-            System.out.println("Simulació amb " + numBankers + " caixers: " + mean);
         }
     }
 
@@ -42,8 +42,8 @@ public class BankSimulator {
         }
     }
 
-    public int getMean(int i) {
-        return meanArray[i];
+    public float getMean(int i) {
+        return meanDataSet[i];
 
     }
 
