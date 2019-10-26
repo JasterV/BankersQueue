@@ -1,3 +1,3 @@
 # BankersQueue
 ## Requisites
-import **Jfreechart** to the external libraries of project.
+Import **Jfreechart** to the external libraries of project.
