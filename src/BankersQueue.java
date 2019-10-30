@@ -5,7 +5,6 @@ public class BankersQueue<E> implements Queue<E>, Iterable<E> {
     private ArrayList<E> back;
     private int modCount = 0;
 
-
     public BankersQueue() {
         front = new ArrayList<>();
         back = new ArrayList<>();

@@ -27,7 +27,7 @@ public class ChartBuilder extends JFrame {
     private JFreeChart createChart(CategoryDataset dataset) {
         return ChartFactory.createBarChart(
                 "BankersQueue",
-                "stage",
+                "Num Bankers",
                 "Minutes",
                 dataset,
                 PlotOrientation.VERTICAL,
